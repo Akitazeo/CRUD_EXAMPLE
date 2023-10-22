@@ -2,12 +2,10 @@ package com.olegbalj.crud_example;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.text.Editable;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -43,13 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         createCheckboxes(tasksLayout);
 
-        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        createCheckboxes(tasksLayout);
-                    }
-                });
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                createCheckboxes(tasksLayout);
+            }
+        });
 
         fab.setOnClickListener(listener -> {
             Intent i = new Intent(getApplicationContext(), Add.class);
@@ -70,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkBoxes.forEach(it -> ((CheckBox) it.get(1)).setOnClickListener((listener) -> {
             tasks.execSQL("DELETE FROM tasks WHERE id = " + it.get(0) + "");
-            linearLayout.removeView((CheckBox)it.get(1));
+            linearLayout.removeView((CheckBox) it.get(1));
         }));
         checkBoxes.forEach(it -> ((CheckBox) it.get(1)).setOnLongClickListener(listener -> {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             alert.setView(editText);
             alert.setPositiveButton("UPDATE", (dialog, whichButton) -> {
                 tasks.execSQL("UPDATE tasks SET task = $arg1 WHERE id = $arg2", new String[]{editText.getText().toString(), String.valueOf(it.get(0))});
-                        createCheckboxes(linearLayout);
+                createCheckboxes(linearLayout);
             });
 
             alert.setNegativeButton("No Option", (dialog, whichButton) -> dialog.dismiss());
